@@ -1,0 +1,186 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,400;1,500&display=swap");
+
+body {
+  display: flex;
+  flex-direction: column;
+  background: #f3f3f3;
+  font-family: "Roboto", sans-serif;
+  color: #333333;
+}
+
+header,
+footer {
+  width: 100vw;
+  height: 80px;
+  position: fixed;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  padding: 15px 25px;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+}
+
+header {
+  top: 0;
+  padding: 15px 25px;
+  font-size: 40px;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+}
+
+header img {
+  height: 50px;
+  margin-bottom: -5px;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  margin: 80px 0;
+  font-size: 14px;
+  overflow: scroll;
+  -ms-overflow-style: none; /* OLHAR SCROLL BAR*/
+  scrollbar-width: none;
+}
+
+main::-webkit-scrollbar {
+  display: none;
+}
+
+main li {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 4px;
+  line-height: 22px;
+  word-break: break-word;
+}
+
+.entrada-saida {
+  background: #dcdcdc;
+}
+
+.conversa-publica {
+  background: #fff;
+}
+
+.conversa-privada {
+  background: #ffdede;
+}
+
+.horario {
+  margin-right: 5px;
+  color: #b8b8b8;
+}
+
+footer {
+  bottom: 0;
+  padding: 15px;
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+  color: #303030;
+}
+
+footer button {
+  font-size: 30px;
+  margin-bottom: 0 0 -5px 5px;
+}
+
+.entrada-mensagem {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  letter-spacing: -0.5px;
+  padding-left: 10px;
+}
+
+.entrada-mensagem input {
+  margin-bottom: 10px;
+}
+
+.entrada-mensagem input::placeholder {
+  font-style: italic;
+  font-size: 16px;
+  color: #606060;
+}
+
+.entrada-mensagem span {
+  font-size: 15px;
+  font-weight: 100;
+}
+
+aside.menu {
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  background: #fff;
+  width: 210px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  transition: all 150ms linear;
+  overflow-y: scroll;
+}
+
+aside.menu.escondido {
+  right: -210px;
+}
+
+.titulo-menu {
+  text-align: center;
+  margin: 20px 0;
+  padding: 0 5px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.5px;
+}
+
+aside.menu li {
+  font-size: 14px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  word-break: break-word;
+}
+
+aside.menu ion-icon {
+  margin-right: 10px;
+  font-size: 20px;
+  margin-top: -2px;
+  flex-shrink: 0;
+}
+
+.check {
+  position: absolute;
+  right: -5px;
+  top: -2px;
+  color: #61aa47;
+  display: none;
+}
+
+.selecionado .check {
+  display: inline;
+}
+
+.menu-fundo {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background: #0009;
+  transition: all 150ms linear;
+}
+
+.fundo-escondido {
+  display: none;
+}
+
+.mensagens-container {
+  height: calc(100vh - 160px);
+  overflow-y: auto;
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bate-papo UOL</title>
+  <link href="assets/stylesheet/reset.css" rel="stylesheet">
+  <link href="assets/stylesheet/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="menu-fundo fundo-escondido" onclick="toggleParticipantes()"></div>
+  
+  <header>
+    <img src="assets/imagens/logo.png">
+    <ion-icon name="people-sharp" onclick="toggleParticipantes()"></ion-icon>
+  </header>
+
+  <main>
+    <ul class="mensagens-container">
+    </ul>
+  </main>
+
+  <footer>
+    <div class="entrada-mensagem">
+      <input placeholder="Escreva aqui..." class="input-mensagem"></input>
+      <span class="enviando">Enviando para Todos</span>
+    </div>
+    <button onclick="enviarMensagem()">
+      <ion-icon name="paper-plane-outline"></ion-icon>
+    </button>
+  </footer>
+
+  <aside class="menu escondido">
+    <h3 class="titulo-menu">Escolha um contato para enviar mensagem:</h3>
+    <ul class="contatos">
+
+    </ul>
+    <h3 class="titulo-menu">Escolha a visibilidade:</h3>
+    <ul class="visibilidades">
+      <li class="visibilidade-publico selecionado" onclick="trocarVisibilidade('publico')">
+        <ion-icon name="lock-open"></ion-icon>Público<ion-icon class="check" name="checkmark-outline">
+        </ion-icon>
+      </li>
+      <li class="visibilidade-privado" onclick="trocarVisibilidade('privado')">
+        <ion-icon name="lock-closed"></ion-icon>Reservadamente<ion-icon class="check" name="checkmark-outline">
+        </ion-icon>
+      </li>
+    </ul>
+  </aside>
+
+  <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="assets/javascript/script.js"></script>
+</body>
+
+</html>

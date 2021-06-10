@@ -97,7 +97,10 @@ function enviarMensagem() {
     type: tipoMensagem
   };
 
-  mensagens.push(dados);
+  mensagens.push({
+    from: nome,
+    ...dados
+  });
   renderizarMensagens();
 
   const requisicao = axios.post("http://localhost:4000/messages", dados, {

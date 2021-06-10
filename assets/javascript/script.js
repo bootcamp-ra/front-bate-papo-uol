@@ -27,7 +27,7 @@ function entrarNaSala() {
 }
 
 function carregarMensagens() {
-  var requisicao = axios.get("http://localhost:4000/messages?limit=50", {
+  const requisicao = axios.get("http://localhost:4000/messages?limit=50", {
     headers: {
       User: nome
     }
@@ -36,7 +36,7 @@ function carregarMensagens() {
 }
 
 function carregarParticipantes() {
-  var requisicao = axios.get("http://localhost:4000/participants", {
+  const requisicao = axios.get("http://localhost:4000/participants", {
     headers: {
       User: nome
     }
@@ -211,7 +211,7 @@ function renderizarParticipantes() {
   let html = "";
 
   for (let i = 0; i < participantes.length; i++) {
-    var participante = participantes[i];
+    const participante = participantes[i];
 
     html += `
       <li onclick="trocarDestinatario(this)" class="${participante.name === destinatario ? "selecionado" : ""}">

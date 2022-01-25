@@ -3,6 +3,7 @@ let participantes = [];
 let nome;
 let destinatario = "Todos";
 let tipoMensagem = "message";
+let buscarMensagens = true;
 
 perguntarNome();
 
@@ -13,7 +14,7 @@ function perguntarNome() {
 
 function registrarParticipante() {
   const dados = { name: nome };
-  const requisicao = axios.post("http://localhost:4000/participants", dados);
+  const requisicao = axios.post("http://localhost:5000/participants", dados);
   requisicao.then(entrarNaSala).catch(perguntarNome);
 }
 
@@ -27,7 +28,9 @@ function entrarNaSala() {
 }
 
 function carregarMensagens() {
-  const requisicao = axios.get("http://localhost:4000/messages?limit=50", {
+  if (!buscarMensagens) return;
+
+  const requisicao = axios.get("http://localhost:5000/messages?limit=50", {
     headers: {
       User: nome
     }
@@ -36,7 +39,7 @@ function carregarMensagens() {
 }
 
 function carregarParticipantes() {
-  const requisicao = axios.get("http://localhost:4000/participants", {
+  const requisicao = axios.get("http://localhost:5000/participants", {
     headers: {
       User: nome
     }
@@ -57,7 +60,7 @@ function agendarAtualizacaoDeStatus() {
 }
 
 function atualizarStatus() {
-  axios.post("http://localhost:4000/status", {}, {
+  axios.post("http://localhost:5000/status", {}, {
     headers: {
       User: nome
     }
@@ -103,7 +106,7 @@ function enviarMensagem() {
   });
   renderizarMensagens();
 
-  const requisicao = axios.post("http://localhost:4000/messages", dados, {
+  const requisicao = axios.post("http://localhost:5000/messages", dados, {
     headers: {
       User: nome
     }
@@ -177,25 +180,41 @@ function renderizarMensagens() {
     const mensagem = mensagens[i];
 
     html += `
-      <li class="${classesMensagens[mensagem.type]}">
-        ${
-          mensagem.time !== undefined
-           ? `<span class="horario">(${mensagem.time})</span>`
-           : ``
-        }
+      <li class="mensagem ${classesMensagens[mensagem.type]}">
+        <div class="conteudo-mensagem">
+          ${
+            mensagem.time !== undefined
+            ? `<span class="horario">(${mensagem.time})</span>`
+            : ``
+          }
 
-        <span>
-          <strong>${mensagem.from}</strong>
-        </span>
+          <span>
+            <strong>${mensagem.from}</strong>
+          </span>
 
-        ${
-          mensagem.type === "private_message"
-           ? `<span> reservadamente para </span>`
-           : `<span> para </span>`
-        }
+          ${
+            mensagem.type === "private_message"
+            ? `<span> reservadamente para </span>`
+            : `<span> para </span>`
+          }
 
-        <strong>${mensagem.to}</strong>
-        <span>${mensagem.text}</span>
+          <strong>${mensagem.to}</strong>
+          <span class="text">${mensagem.text}</span>
+        </div>
+        <div class="acoes-mensagem">
+          ${
+            ((mensagem.from === nome && mensagem.type.indexOf("message") > -1 && mensagem.time) || "") &&
+             `
+              <button class="editar" onclick="editarMensagem(this, '${mensagem._id}')">
+                <ion-icon name="create"></ion-icon>
+              </button>
+
+              <button class="excluir" onclick="excluirMensagem('${mensagem._id}')">
+                <ion-icon name="trash"></ion-icon>
+              </button>
+             `
+          }
+        </div>
       </li>
     `;
   }
@@ -228,4 +247,65 @@ function renderizarParticipantes() {
   }
 
   ul.innerHTML = html;
+}
+
+let oldHtml = "";
+let conteudoMensagem = null;
+let editing = false;
+let mensagem = null;
+
+function editarMensagem(elemento, id) {
+  if (editing) return;
+  editing = true;
+
+  buscarMensagens = false;
+  conteudoMensagem = elemento.parentNode.parentNode.querySelector(".conteudo-mensagem");
+  oldHtml = conteudoMensagem.innerHTML;
+  mensagem = mensagens.find(m => m._id === id);
+
+  conteudoMensagem.innerHTML = `
+    <input type="text" value="${mensagem.text}" autofocus placeholder="Digite o novo valor da mensagem" onkeydown="enviarMensagemEditada(event, '${id}')" class="mensagem-editada" />
+  `;
+}
+
+function enviarMensagemEditada(event, id) {
+  if (event.key === "Escape") {
+    conteudoMensagem.innerHTML = oldHtml;
+    editing = false;
+  } else if (event.key === "Enter") {
+    editing = false;
+    const newMessage = document.querySelector(".mensagem-editada").value;
+    conteudoMensagem.innerHTML = oldHtml;
+    conteudoMensagem.querySelector(".text").innerHTML = newMessage;
+
+    axios.put(`http://localhost:5000/messages/${id}`, {
+      to: mensagem.to,
+      text: newMessage,
+      type: mensagem.type
+    }, {
+      headers: {
+        User: nome
+      }
+    }).catch(err => {
+      console.error('Não foi possível editar mensagem!');
+      console.error(err);
+    }).then(() => {
+      buscarMensagens = true;
+    });
+  }
+}
+
+function excluirMensagem(id) {
+  const confirmacao = confirm("Deseja realmente excluir esta mensagem?");
+
+  if (confirmacao) {
+    axios.delete(`http://localhost:5000/messages/${id}`, {
+      headers: {
+        User: nome
+      }
+    }).catch(err => {
+      console.error('Não foi possível apagar mensagem!');
+      console.error(err);
+    });
+  }
 }
